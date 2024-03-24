@@ -1,5 +1,6 @@
 Questa repository contengono i file e lo script R/Python per l'analisi delle temperature in Italia,
 presa come argomento di tesi magistrale per il corso di laurea in Economia e Business Analytics.
+I dati prevengono da due fonti: sito ISTAT (sezione Clima) e sito 3BMeteo.
 
 I file sono così suddivisi:
 
