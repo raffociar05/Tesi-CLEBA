@@ -96,7 +96,7 @@ print(f'Test Loss: {test_loss}')
 
 
 '''
-I risultati che si ottengono l'addestramento di una rete LSTM mostrano le perdite sul training set e sul test set.
+I risultati che si ottengono dall'addestramento della rete LSTM mostrano le perdite sul training set e sul test set.
 La perdita, spesso chiamata errore di training o errore di test, è una misura della discrepanza tra i valori previsti dal 
 modello e i valori reali nei dati di training e di test, rispettivamente.
 Train Loss (Perdita sul training set): La perdita sul training set è la misura dell'errore del modello sui dati che sono 
