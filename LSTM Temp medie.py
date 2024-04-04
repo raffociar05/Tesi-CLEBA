@@ -28,7 +28,7 @@ dove n è il numero di elementi dell'array originale.
 
 data = df['Gradi'].values.reshape(-1, 1)
 
-# Normalizzazione dei dati
+# Normalizzazione dei dati tra i valori 0 e 1
 scaler = MinMaxScaler(feature_range=(0, 1))
 data_normalized = scaler.fit_transform(data)
 
