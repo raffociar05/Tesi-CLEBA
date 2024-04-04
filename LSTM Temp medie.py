@@ -9,7 +9,7 @@ from keras.layers import LSTM, Dropout, Dense
 from keras.callbacks import EarlyStopping
 from keras.utils import plot_model
 
-#dataframe originario
+# dataframe originario (copia)
 df_original = pd.read_excel('df_temp_media_bis.xlsx')
 df_original['Data'] = pd.to_datetime(df_original['Data'])
 df_original.set_index('Data', inplace=True)
@@ -24,7 +24,7 @@ plt.legend()
 plt.grid(True)
 plt.show()
 
-# importazione dei dati su cui lavorare
+# importazione dei dati e creazione del df su cui lavorare
 df = pd.read_excel('df_temp_media_bis.xlsx')
 
 #Preprocessing
