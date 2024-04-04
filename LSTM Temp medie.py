@@ -8,7 +8,7 @@ from tensorflow.keras.layers import LSTM, Dense
 from tensorflow.keras.callbacks import EarlyStopping
 import matplotlib.pyplot as plt
 
-# caricamento del dataframe
+# Caricamento del dataframe
 df = pd.read_excel("df_temp_media_bis.xlsx")
 
 # Visualizzazione delle prime righe
