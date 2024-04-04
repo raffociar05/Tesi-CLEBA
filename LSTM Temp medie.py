@@ -8,15 +8,15 @@ from tensorflow.keras.layers import LSTM, Dense
 from tensorflow.keras.callbacks import EarlyStopping
 import matplotlib.pyplot as plt
 
-# Carica il dataframe
+# caricamento del dataframe
 df = pd.read_csv("df_temp_media.csv")
 
-# Visualizza le prime righe del dataframe
+# Visualizzazione delle prime righe
 print(df.head())
 
 # Preprocessing dei dati
 
-# Converti la variabile "Data" in formato datetime
+# Conversione della variabile "Data" in formato datetime
 df['Data'] = pd.to_datetime(df['Data'])
 
 '''
@@ -54,11 +54,11 @@ y_train, y_test = y[:train_size], y[train_size:]
 # Definizione del modello LSTM
 model = Sequential()
 model.add(LSTM(units=50, activation='relu', return_sequences=True,input_shape=(seq_length, 1)))
-# Aggiungi il secondo layer LSTM
+# Secondo layer LSTM
 model.add(LSTM(units=50, return_sequences=True))
-# Aggiungi il terzo layer LSTM
+# Terzo layer LSTM
 model.add(LSTM(units=50))
-# Aggiungi un layer completamente connesso
+# Layer completamente connesso
 model.add(Dense(units=1))
 
 # Compilazione del modello
@@ -96,7 +96,7 @@ print(f'Test Loss: {test_loss}')
 
 
 '''
-I risultati che hai ottenuto dopo l'addestramento di una rete LSTM mostrano le perdite sul training set e sul test set.
+I risultati che si ottengono l'addestramento di una rete LSTM mostrano le perdite sul training set e sul test set.
 La perdita, spesso chiamata errore di training o errore di test, è una misura della discrepanza tra i valori previsti dal 
 modello e i valori reali nei dati di training e di test, rispettivamente.
 Train Loss (Perdita sul training set): La perdita sul training set è la misura dell'errore del modello sui dati che sono 
@@ -106,7 +106,7 @@ Test Loss (Perdita sul test set): La perdita sul test set è la misura dell'erro
 utilizzati durante l'addestramento, ma sono stati riservati appositamente per valutare le prestazioni del modello su dati non visti.
 Una bassa perdita sul test set indica che il modello è in grado di generalizzare bene oltre ai dati di training e può fare
 previsioni accurate su nuovi dati.
-Nel tuo caso, hai una perdita leggermente maggiore sul test set rispetto al training set, il che è abbastanza comune. 
+In questo caso, si ha una perdita leggermente maggiore sul test set rispetto al training set. 
 Tuttavia, le differenze tra la perdita sul training set e quella sul test set sembrano essere relativamente piccole, il che 
 potrebbe indicare che il modello sta generalizzando bene e non sta soffrendo di overfitting (cioè, non sta adattando troppo 
 strettamente i dati di training).
