@@ -1,4 +1,4 @@
-setwd("C:\\UTENTE\\Desktop\\Tesi CLEBA\\R\\3BMeteo")
+setwd("C:\\Users\\ei1ciarr\\Downloads\\Tesi\\Script R - 3BMeteo")
 
 temp_ita.df <- read.csv("temp_ita.csv", sep=";")
 
@@ -122,7 +122,6 @@ names(mean.min.sud_df) <- c("Data","Mean Min Sud")
   
 mean.media.sud <- rowMeans(sud.media[c(2:9)])
 mean.media.sud_df <- data.frame(sud.media$Data,mean.media.sud)
-names(mean.media.sud_df) <- c("Data","Mean Media Sud")
   
 mean.max.sud <- rowMeans(sud.max[c(2:9)])
 mean.max.sud_df <- data.frame(sud.max$Data,mean.max.sud)
@@ -316,8 +315,6 @@ hist(mean.max.nord_df$`Mean Max Nord`, breaks = 7, probability = T, col="blue",
      ylim=c(0,0.05), main = "Temperature Massime NORD", xlab="Gradi(°C)")
 lines(density(mean.max.nord_df$`Mean Max Nord`), lwd=2)
 
-#########################################################
-
 
 
 ################################################################################
@@ -436,7 +433,7 @@ ggarrange(violin.max.sud,violin.max.centro, violin.max.nord)
 ########################################################################
 #test normalita
 mean.min.sud.sample <- mean.min.sud_df[sample(nrow(mean.min.sud_df), 5000),]$`Mean Min Sud`
-mean.medie.sud.sample <- mean.media.sud_df[sample(nrow(mean.media.sud_df), 5000),]$`Mean Media Sud`
+mean.medie.sud.sample <- mean.media.sud_df[sample(nrow(mean.media.sud_df), 5000),]$mean.media.sud
 mean.max.sud.sample <- mean.max.sud_df[sample(nrow(mean.max.sud_df), 5000),]$`Mean Max Sud`
 
 mean.min.centro.sample <- mean.min.centro_df[sample(nrow(mean.min.centro_df), 5000),]$`Mean Min Centro`
@@ -570,6 +567,38 @@ plot_ly(mean.max.ita, x = mean.max.ita$Giorno, type = "scatter", mode = "lines+t
   layout(xaxis = list(title = "Anni"), yaxis = list(title = "Gradi (°C)")) %>%
   config(displayModeBar = TRUE)
 
+################################################################################
+
+#calcolo media temperatura per mese
+
+mesi <- format(mean.min.ita$Giorno, "%Y-%m")
+
+months_seq <- seq(from = ymd("2008-01-01"), to = ymd("2023-12-31"), by = "months")
+
+mean.min.sud.month <- aggregate(mean.min.ita$Sud ~ mesi, data = mean.min.ita, FUN = mean)
+mean.min.centro.month <- aggregate(mean.min.ita$Centro ~ mesi, data = mean.min.ita, FUN = mean)
+mean.min.nord.month <- aggregate(mean.min.ita$Nord ~ mesi, data = mean.min.ita, FUN = mean)
+
+mean.min.ita.month <- data.frame(months_seq,mean.min.sud.month$`mean.min.ita$Sud`,mean.min.centro.month$`mean.min.ita$Centro`,mean.min.nord.month$`mean.min.ita$Nord`)
+names(mean.min.ita.month) <- c("Mese","Sud","Centro","Nord")
+
+mean.media.sud.month <- aggregate(mean.media.ita$Sud ~ mesi, data = mean.media.ita, FUN = mean)
+mean.media.centro.month <- aggregate(mean.media.ita$Centro ~ mesi, data = mean.media.ita, FUN = mean)
+mean.media.nord.month <- aggregate(mean.media.ita$Nord ~ mesi, data = mean.media.ita, FUN = mean)
+
+mean.media.ita.month <- data.frame(months_seq,mean.media.sud.month$`mean.media.ita$Sud`,mean.media.centro.month$`mean.media.ita$Centro`,mean.media.nord.month$`mean.media.ita$Nord`)
+names(mean.media.ita.month) <- c("Mese","Sud","Centro","Nord")
+
+mean.max.sud.month <- aggregate(mean.max.ita$Sud ~ mesi, data = mean.max.ita, FUN = mean)
+mean.max.centro.month <- aggregate(mean.max.ita$Centro ~ mesi, data = mean.max.ita, FUN = mean)
+mean.max.nord.month <- aggregate(mean.max.ita$Nord ~ mesi, data = mean.max.ita, FUN = mean)
+
+mean.max.ita.month <- data.frame(months_seq,mean.max.sud.month$`mean.max.ita$Sud`,mean.max.centro.month$`mean.max.ita$Centro`,mean.max.nord.month$`mean.max.ita$Nord`)
+names(mean.max.ita.month) <- c("Mese","Sud","Centro","Nord")
+
+View(mean.min.ita.month)
+View(mean.media.ita.month)
+View(mean.max.ita.month)
 
 
 ################################################################################
@@ -900,7 +929,7 @@ axis(1, at=2008:2023, labels=c(2008:2023))
 abline(stima.trend.add.temp.media, col="red", lwd=2)
 
 
-#previsione a tre anni temperature minime
+#previsione a cinque anni temperature minime
 forecast.classica.add.temp.min <- forecast(classica.add.temp.min$x, h=1825)
 plot(forecast.classica.add.temp.min)
 
@@ -910,7 +939,7 @@ lines(forecast.classica.add.temp.min$mean, col="red")
 summary(temp.min.ts)
 summary(forecast.classica.add.temp.min$mean)
 
-#previsione a tre anni temperature massime
+#previsione a cinque anni temperature massime
 forecast.classica.add.temp.max <- forecast(classica.add.temp.max$x, h=1825)
 plot(forecast.classica.add.temp.max)
 
@@ -920,7 +949,7 @@ lines(forecast.classica.add.temp.max$mean, col="red")
 summary(temp.max.ts)
 summary(forecast.classica.add.temp.max$mean)
 
-#previsione a tre anni temperature media
+#previsione a cinque anni temperature media
 forecast.classica.add.temp.media <- forecast(classica.add.temp.media$x, h=1825)
 plot(forecast.classica.add.temp.media, main = "Forecast Model Additive",
      xlab="Anni",ylab="Gradi (°C)")
@@ -933,8 +962,35 @@ legend("bottomright",           # Posizione della legenda
        lty=1,                  # Stili delle linee
        cex=0.7) 
 
+
 summary(temp.media.ts)
 summary(forecast.classica.add.temp.media$mean)
+
+
+#unione dati + previsioni
+
+#combine df and forecast
+new_temp.media_add <- c(temp.media.ts,forecast.classica.add.temp.media$mean)
+new_temp.media.df_add <- as.data.frame(new_temp.media_add)
+names(new_temp.media.df_add) <- "temp_media"
+
+# Creazione delle date dal 01/01/2008 al 31/12/2028
+date_range <- seq.Date(from = as.Date("2008-01-01"), to = as.Date("2028-12-31"), by = "days")
+
+# esclusione giorni bisestili (29 febbraio)
+date_range_no_leap <- date_range[!(format(date_range, "%m-%d") == "02-29")]
+
+# variabile "Giorno"
+new_temp.media.df_add$Giorno <- date_range_no_leap
+
+# estrazione anno dalla variabile "Giorno"
+new_temp.media.df_add$Anno <- format(new_temp.media.df_add$Giorno, "%Y")
+
+# Calcolo media annuale della variabile "temp_media"
+media_annuale_add <- new_temp.media.df_add %>%
+  group_by(Anno) %>%
+  summarise(media_temp_media_add = mean(temp_media))
+
 
 ###########################################
 #metodo HOLT-WINTERS temperatura media
@@ -974,6 +1030,34 @@ predicted_values <- predict(exp.sm.temp.media, n.ahead = 1825)
 
 # Visualizza le previsioni
 print(predicted_values)
+
+####################
+#Media annulae (valori + previsioni)
+
+#combine df and forecast
+new_temp.media_hw <- c(temp.media.ts,forecast.exp.sm.temp.media$mean)
+new_temp.media.df_hw <- as.data.frame(new_temp.media_hw)
+names(new_temp.media.df_hw) <- "temp_media"
+
+# Creazione delle date dal 01/01/2008 al 31/12/2028
+date_range <- seq.Date(from = as.Date("2008-01-01"), to = as.Date("2028-12-31"), by = "days")
+
+# esclusione giorni bisestili (29 febbraio)
+date_range_no_leap <- date_range[!(format(date_range, "%m-%d") == "02-29")]
+
+# variabile "Giorno"
+new_temp.media.df_hw$Giorno <- date_range_no_leap
+
+# estrazione anno dalla variabile "Giorno"
+new_temp.media.df_hw$Anno <- format(new_temp.media.df$Giorno, "%Y")
+
+# Calcolo media annuale della variabile "temp_media"
+media_annuale_hw <- new_temp.media.df_hw %>%
+  group_by(Anno) %>%
+  summarise(media_temp_media_hw = mean(temp_media))
+
+
+####################
 
 
 
@@ -1083,8 +1167,6 @@ pacf(temp.media.ts.log.diff, lag.max = 1000, main = "PACF Serie logaritmica diff
 
 
 
-
-
 #Stima Modelli ARMA
 
 arma22_temp.min <- Arima(temp.min.ts, order = c(2,0,2), lambda=0)
@@ -1120,7 +1202,8 @@ legend("bottomright",           # Posizione della legenda
        cex=0.5) 
 
 #anlisi residui modelli
-res.arma22_temp.min <- ts(scale(na.omit(arma22_temp.min$residuals)))
+res.test <- as.double(arma22_temp.min$residuals)
+res.arma22_temp.min <- ts(scale(na.omit(res.test)))
 res.arma13_temp.max <- ts(scale(na.omit(arma13_temp.max$residuals)))
 res.prova <- as.double(arma32_temp.media$residuals)
 res.arma32_temp.media <- ts(scale(na.omit(res.prova)))
@@ -1173,7 +1256,7 @@ Box.test(res.arma32_temp.media, lag = 1, type = "Ljung-Box")
 #indicando che la serie temporale no contiene un'autocorrelazione.
  
 
-#PREVISIONI a 3 anni
+#PREVISIONI a 5 anni
 temp.min.forecast <- forecast(arma22_temp.min$fitted, h=1825)
 
 accuracy(temp.min.ts,temp.min.forecast$fitted)
@@ -1217,9 +1300,27 @@ lines(temp.media.forecast$mean, col="red")
 summary(temp.max.ts)
 summary(temp.max.forecast$mean)
 
+#combine df and forecast
+new_temp.media <- c(temp.media.ts,temp.media.forecast$mean)
+new_temp.media.df <- as.data.frame(new_temp.media)
+names(new_temp.media.df) <- "temp_media"
 
-write.csv(temp.min.ita.df2, "C:\\UTENTE\\Desktop\\Tesi CLEBA\\R\\3BMeteo\\DF Min Max\\df_temp_min.csv", row.names=FALSE)
-write.csv(temp.max.ita.df2, "C:\\UTENTE\\Desktop\\Tesi CLEBA\\R\\3BMeteo\\DF Min Max\\df_temp_max.csv", row.names=FALSE)
-write.csv(temp.media.ita.df2, "C:\\UTENTE\\Desktop\\Tesi CLEBA\\R\\3BMeteo\\DF Min Max\\df_temp_media.csv", row.names=FALSE)
+# Creazione delle date dal 01/01/2008 al 31/12/2028
+date_range <- seq.Date(from = as.Date("2008-01-01"), to = as.Date("2028-12-31"), by = "days")
 
-write.csv(temp.media.ita.df, "C:\\UTENTE\\Desktop\\Tesi CLEBA\\R\\3BMeteo\\DF Min Max\\df_temp_media_bis.csv", row.names=FALSE)
+# esclusione giorni bisestili (29 febbraio)
+date_range_no_leap <- date_range[!(format(date_range, "%m-%d") == "02-29")]
+
+# variabile "Giorno"
+new_temp.media.df$Giorno <- date_range_no_leap
+
+# estrazione anno dalla variabile "Giorno"
+new_temp.media.df$Anno <- format(new_temp.media.df$Giorno, "%Y")
+
+# Calcolo media annuale della variabile "temp_media"
+media_annuale <- new_temp.media.df %>%
+  group_by(Anno) %>%
+  summarise(media_temp_media = mean(temp_media))
+
+
+
